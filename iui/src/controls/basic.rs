@@ -1,9 +1,9 @@
 use super::Control;
 use std::os::raw::c_void;
-use std::ffi::{CStr, CString};
 use std::mem;
 use ui::UI;
 use ui_sys::{self, uiButton, uiControl, uiLabel};
+use str_tools::{from_toolkit_string, to_toolkit_string};
 
 define_control!{
     /// A non-interactable piece of text.
@@ -20,8 +20,8 @@ define_control!{
 impl Button {
     /// Create a new button with the given text as its label.
     pub fn new(_ctx: &UI, text: &str) -> Button {
+        let c_string = to_toolkit_string(text);
         unsafe {
-            let c_string = CString::new(text.as_bytes().to_vec()).unwrap();
             Button::from_raw(ui_sys::uiNewButton(c_string.as_ptr()))
         }
     }
@@ -29,21 +29,14 @@ impl Button {
     /// Get a copy of the existing text on the button.
     pub fn text(&self, _ctx: &UI) -> String {
         unsafe {
-            CStr::from_ptr(ui_sys::uiButtonText(self.uiButton))
-                .to_string_lossy()
-                .into_owned()
+            from_toolkit_string(ui_sys::uiButtonText(self.uiButton))
         }
-    }
-
-    /// Get a reference to the existing text on the button.
-    pub fn text_ref(&self, _ctx: &UI) -> &CStr {
-        unsafe { CStr::from_ptr(ui_sys::uiButtonText(self.uiButton)) }
     }
 
     /// Set the text on the button.
     pub fn set_text(&mut self, _ctx: &UI, text: &str) {
+        let c_string = to_toolkit_string(text);
         unsafe {
-            let c_string = CString::new(text.as_bytes().to_vec()).unwrap();
             ui_sys::uiButtonSetText(self.uiButton, c_string.as_ptr())
         }
     }
@@ -74,8 +67,8 @@ impl Label {
     /// Note that labels do not auto-wrap their text; they will expand as far as needed
     /// to fit.
     pub fn new(_ctx: &UI, text: &str) -> Label {
+        let c_string = to_toolkit_string(text);
         unsafe {
-            let c_string = CString::new(text.as_bytes().to_vec()).unwrap();
             Label::from_raw(ui_sys::uiNewLabel(c_string.as_ptr()))
         }
     }
@@ -83,21 +76,14 @@ impl Label {
     /// Get a copy of the existing text on the label.
     pub fn text(&self, _ctx: &UI) -> String {
         unsafe {
-            CStr::from_ptr(ui_sys::uiLabelText(self.uiLabel))
-                .to_string_lossy()
-                .into_owned()
+            from_toolkit_string(ui_sys::uiLabelText(self.uiLabel))
         }
-    }
-
-    /// Get a reference to the existing text on the label.
-    pub fn text_ref(&self, _ctx: &UI) -> &CStr {
-        unsafe { CStr::from_ptr(ui_sys::uiLabelText(self.uiLabel)) }
     }
 
     /// Set the text on the label.
     pub fn set_text(&mut self, _ctx: &UI, text: &str) {
+        let c_string = to_toolkit_string(text);
         unsafe {
-            let c_string = CString::new(text.as_bytes().to_vec()).unwrap();
             ui_sys::uiLabelSetText(self.uiLabel, c_string.as_ptr())
         }
     }

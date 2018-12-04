@@ -13,6 +13,8 @@ project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 - `RadioButtons` control for groups of radio buttons
 - `Combobox::selected()` method to retrieve the currently selected index of the combobox
 - Officially move communications to the Matrix room #rust-native-ui:matrix.nora.codes
+* `str_tools` module provides utilities for converting to and from system `CString` and
+`CStr` values, while enforcing correct newline values (CR vs CRLF).
 
 ### Changed
 
@@ -29,12 +31,15 @@ No deprecations.
 ### Removed
 
 * `Transform` no longer implements `PartialEq` as the existing implementation was broken.
+* `Button` and `Label` no longer implement `text_ref` as we cannot ensure toolkit newline
+compliance.
 
 ### Fixed
 
 * `VerticalBox` and `HorizontalBox` no longer link to the removed `BoxExt` trait.
 * `ui-sys` now builds on modern macOS.
 * `inputs` and `inputs-grid` examples no longer erroneously start at 0 for inputs starting at 1.
+* Text no longer uses incorrect newlines per platform.
 
 ### Security
 
