@@ -4,6 +4,10 @@ use bindgen::Builder as BindgenBuilder;
 use std::env;
 use std::path::{Path, PathBuf};
 use std::process::Command;
+#[cfg(unix)]
+use std::os::unix;
+#[cfg(windows)]
+use std::os::windows;
 
 fn main() {
     // Fetch the submodule if needed
@@ -102,6 +106,20 @@ fn main() {
             .expect("Could not build libui. Error");
 
         dst = dst.join("meson-out");
+
+        // Dynamic libraries we built on UNIX need to be symlinked.
+        if !cfg!(feature = "static") && !msvc {
+            let mut actual_so_location = dst.clone();
+            let mut link_so_location = dst.clone();
+            actual_so_location.push("libui.so.1");
+
+            // ... but not if there's already a symlink.
+            if (!link_so_location.exists()) {
+                link_so_location.push("libui.so");
+                unix::fs::symlink(&actual_so_location, &link_so_location)
+                    .expect("Could not symlink .so.1 to .so. Error");
+            }
+        }
 
         if msvc {
             dst = dst.join("Release");
