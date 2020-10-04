@@ -56,7 +56,7 @@ Also be sure to look at our [changelog](CHANGELOG.md) and learn [how to contribu
 ### Building ui-sys
 
 `ui-sys` includes `libui` as a sub-module and allows it to be built on-the-fly with the
-default features `fetch` and `build. With `fetch disabled, it will simply build the
+default features `fetch` and `build`. With `fetch` disabled, it will simply build the
 existing sources without updating them, and with `build` disabled it will build nothing,
 assuming either a system or local (in `./lib/`) version of `libui` is available.
 
